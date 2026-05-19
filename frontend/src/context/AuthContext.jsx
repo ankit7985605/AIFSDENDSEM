@@ -8,7 +8,13 @@ export const AuthProvider = ({ children }) => {
     const [loading, setLoading] = useState(true);
 
     // Initialize base URL for axios using environment variable or fallback to IPv4 localhost
-    axios.defaults.baseURL = import.meta.env.VITE_API_URL || 'http://127.0.0.1:5000/api';
+    let apiUrl = import.meta.env.VITE_API_URL || 'http://127.0.0.1:5000/api';
+    
+    // Auto-fix the URL if the user forgot to add /api at the end in Vercel settings
+    if (apiUrl && !apiUrl.includes('/api')) {
+        apiUrl = apiUrl.endsWith('/') ? `${apiUrl}api` : `${apiUrl}/api`;
+    }
+    axios.defaults.baseURL = apiUrl;
 
     useEffect(() => {
         // Check for token in localStorage on app load
