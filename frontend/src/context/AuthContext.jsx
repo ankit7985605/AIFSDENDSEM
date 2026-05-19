@@ -7,8 +7,8 @@ export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
 
-    // Initialize base URL for axios using environment variable or fallback to localhost
-    axios.defaults.baseURL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+    // Initialize base URL for axios using environment variable or fallback to IPv4 localhost
+    axios.defaults.baseURL = import.meta.env.VITE_API_URL || 'http://127.0.0.1:5000/api';
 
     useEffect(() => {
         // Check for token in localStorage on app load
@@ -31,9 +31,10 @@ export const AuthProvider = ({ children }) => {
             axios.defaults.headers.common['Authorization'] = `Bearer ${data.token}`;
             return { success: true };
         } catch (error) {
+            console.error('Login Error:', error);
             return {
                 success: false,
-                message: error.response?.data?.message || 'Login failed'
+                message: error.response?.data?.message || error.message || 'Login failed'
             };
         }
     };
@@ -47,9 +48,10 @@ export const AuthProvider = ({ children }) => {
             axios.defaults.headers.common['Authorization'] = `Bearer ${data.token}`;
             return { success: true };
         } catch (error) {
+            console.error('Signup Error:', error);
             return {
                 success: false,
-                message: error.response?.data?.message || 'Signup failed'
+                message: error.response?.data?.message || error.message || 'Signup failed'
             };
         }
     };
