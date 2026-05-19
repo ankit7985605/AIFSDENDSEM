@@ -24,6 +24,30 @@ const ComplaintList = ({ refreshTrigger }) => {
         }
     }, []);
 
+    // API DELETE Request
+    const handleDelete = async (id) => {
+        if (window.confirm('Are you sure you want to delete this complaint? (Demonstrating DELETE API)')) {
+            try {
+                await axios.delete(`/complaints/${id}`);
+                // Remove from UI
+                setComplaints(complaints.filter(c => c._id !== id));
+            } catch (err) {
+                alert('Error deleting complaint');
+            }
+        }
+    };
+
+    // API PUT Request
+    const handleUpdateStatus = async (id, newStatus) => {
+        try {
+            const res = await axios.put(`/complaints/${id}`, { status: newStatus });
+            // Update in UI
+            setComplaints(complaints.map(c => c._id === id ? res.data : c));
+        } catch (err) {
+            alert('Error updating status');
+        }
+    };
+
     useEffect(() => {
         fetchComplaints();
     }, [refreshTrigger, fetchComplaints]);
@@ -86,7 +110,12 @@ const ComplaintList = ({ refreshTrigger }) => {
             ) : (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
                     {complaints.map(complaint => (
-                        <ComplaintCard key={complaint._id} complaint={complaint} />
+                        <ComplaintCard 
+                            key={complaint._id} 
+                            complaint={complaint} 
+                            onDelete={handleDelete}
+                            onUpdateStatus={handleUpdateStatus}
+                        />
                     ))}
                 </div>
             )}

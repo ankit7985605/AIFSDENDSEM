@@ -1,4 +1,6 @@
-const ComplaintCard = ({ complaint }) => {
+import { Trash2, Edit } from 'lucide-react';
+
+const ComplaintCard = ({ complaint, onDelete, onUpdateStatus }) => {
     
     // Helper to get status class
     const getStatusClass = (status) => {
@@ -70,6 +72,24 @@ const ComplaintCard = ({ complaint }) => {
                     </div>
                 </div>
             )}
+            {/* Action Buttons for PUT and DELETE */}
+            <div style={{ marginTop: '1.5rem', display: 'flex', gap: '10px', borderTop: '1px solid var(--border-color)', paddingTop: '1rem' }}>
+                <button 
+                    onClick={() => onUpdateStatus(complaint._id, 'Resolved')}
+                    className="btn" 
+                    style={{ background: 'var(--success-light)', color: 'var(--success)', flex: 1, padding: '0.5rem' }}
+                >
+                    <Edit size={16} /> Mark Resolved (PUT)
+                </button>
+                <button 
+                    onClick={() => onDelete(complaint._id)}
+                    className="btn" 
+                    style={{ background: 'var(--danger-light)', color: 'var(--danger)', padding: '0.5rem 1rem' }}
+                    title="Delete Complaint"
+                >
+                    <Trash2 size={16} /> (DELETE)
+                </button>
+            </div>
         </div>
     );
 };
